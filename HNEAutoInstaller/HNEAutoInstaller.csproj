@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.0-preview.7.21378.4" />
+    <PackageReference Include="Narumikazuchi" Version="1.0.0" />
+    <PackageReference Include="Narumikazuchi.Collections" Version="5.0.0" />
+    <PackageReference Include="Narumikazuchi.Collections.Abstract" Version="1.0.0" />
+    <PackageReference Include="Narumikazuchi.Windows" Version="2.2.0" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="2.0.6" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.115" />
+  </ItemGroup>
+
+</Project>
