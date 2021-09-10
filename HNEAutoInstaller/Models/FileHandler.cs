@@ -1,5 +1,6 @@
 ﻿using HNEAutoInstaller.Services;
 using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
@@ -26,37 +27,70 @@ namespace HNEAutoInstaller.Models
         }
 
         // Fetch all files in install folder
-        public static String[] FetchAllFiles()
+        public static List<String> FetchAllFiles()
         {
             try
             {
-                _fileList = Directory.GetFiles(InstallFilesFolder).Select(Path.GetFileName).ToArray();
+                _fileList = Directory.GetFiles(InstallFilesFolder).Select(Path.GetFileName).ToList();
             }
             catch (Exception e)
+
             {
                 Console.WriteLine(e);
             }
             return _fileList;
         }
 
-        public static void InstallFiles()
+        public static List<String> FetchPresetFiles()
+        {
+            try
+            {
+                DatabaseService dbObject = new();
+                String query = @"SELECT * FROM Presets WHERE FullFileName = @fullFileName;";
+
+                dbObject.OpenConnection();
+                SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
+                installArgumentCommand.Parameters.AddWithValue("@fullFileName", _fullFileName);
+                dbObject.CloseConnection();
+                SQLiteDataReader result = installArgumentCommand.ExecuteReader();
+
+                if (result.HasRows)
+                {
+                    while (result.Read())
+                    {
+                        _presetFileList.Add(Convert.ToString(result["FullFileName"]));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return _presetFileList;
+        }
+
+        // Install all files from directory InstallFiles
+        public static void InstallAllFiles()
         {
             _fileList = FetchAllFiles();
 
-            DatabaseService dbObject = new DatabaseService();
-            dbObject.OpenConnection();
+            DatabaseService dbObject = new();
+
             String query = @"SELECT * FROM Files WHERE FullFileName = @fullFileName;";
 
             try
             {
                 if (_fileList != null)
                 {
-                    for (Int32 i = 0; i < _fileList.Length; i++)
+                    for (Int32 i = 0; i < _fileList.Count; i++)
                     {
                         _fullFileName = _fileList[i];
 
+                        dbObject.OpenConnection();
                         SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
                         installArgumentCommand.Parameters.AddWithValue("@fullFileName", _fullFileName);
+                        dbObject.CloseConnection();
+
                         SQLiteDataReader result = installArgumentCommand.ExecuteReader();
 
                         if (result.HasRows)
@@ -69,21 +103,7 @@ namespace HNEAutoInstaller.Models
                             }
                         }
 
-                        if (_fileExtension == "exe")
-                        {
-                            Process p = new Process();
-                            p.StartInfo.FileName = $"{InstallFilesFolder}" + "\\" + $"{_fileList[i]}";
-                            p.StartInfo.Arguments = $"{_installArgument}";
-                            p.Start();
-                            p.WaitForExit();
-                        }
-
-                        if (_fileExtension == "zip")
-                        {
-                            _zipFrom = $"{InstallFilesFolder}" + "\\" + $"{_fileList[i]}";
-
-                            System.IO.Compression.ZipFile.ExtractToDirectory(_zipFrom, _zipDestination);
-                        }
+                        InstallFile(_fileExtension, _fullFileName, _installArgument, _zipDestination);
                     }
                 }
             }
@@ -91,15 +111,33 @@ namespace HNEAutoInstaller.Models
             {
                 Console.WriteLine(e);
             }
+        }
 
-            dbObject.CloseConnection();
+        // Install the files
+        public static void InstallFile(String ext, String file, String instArgs, String desti)
+        {
+            if (ext == "exe")
+            {
+                Process p = new();
+                p.StartInfo.FileName = $"{InstallFilesFolder}" + "\\" + $"{file}";
+                p.StartInfo.Arguments = $"{instArgs}";
+                p.Start();
+                p.WaitForExit();
+            }
+
+            if (ext == "zip")
+            {
+                _zipFrom = $"{InstallFilesFolder}" + "\\" + $"{file}";
+
+                System.IO.Compression.ZipFile.ExtractToDirectory(_zipFrom, desti);
+            }
         }
 
         private const String InstallFilesFolder = "InstallFiles";
         private const String DatabaseFolder = "Database";
-        private const String DatabaseFile = "Database.db";
 
-        private static String[] _fileList = Array.Empty<String>();
+        private static List<String> _fileList = new List<string>();
+        private static List<String> _presetFileList = new List<string>();
         private static String _fullFileName = String.Empty;
         private static String _installArgument = String.Empty;
         private static String _fileExtension = String.Empty;

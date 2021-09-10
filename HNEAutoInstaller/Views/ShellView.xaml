@@ -1,0 +1,17 @@
+﻿<Window x:Class="HNEAutoInstaller.Views.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:HNEAutoInstaller.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:ShellViewModel}"
+        mc:Ignorable="d"
+        Title="HNE Auto Installer v2"
+        Height="768"
+        Width="1024"
+        WindowStartupLocation="CenterScreen"
+        Background="#004d3d">
+    <Grid>
+        
+    </Grid>
+</Window>
