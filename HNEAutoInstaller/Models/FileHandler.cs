@@ -16,7 +16,7 @@ namespace HNEAutoInstaller.Models
         {
             try
             {
-                DirectoryInfo working = new DirectoryInfo(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+                DirectoryInfo working = new(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
                 working.CreateSubdirectory(InstallFilesFolder);
                 working.CreateSubdirectory(DatabaseFolder);
             }
@@ -46,12 +46,12 @@ namespace HNEAutoInstaller.Models
             try
             {
                 DatabaseService dbObject = new();
-                String query = @"SELECT * FROM Presets WHERE FullFileName = @fullFileName;";
+                String query = @"SELECT * FROM Files WHERE Preset = @preset;";
 
                 dbObject.OpenConnection();
                 SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
-                installArgumentCommand.Parameters.AddWithValue("@fullFileName", _fullFileName);
-                dbObject.CloseConnection();
+                installArgumentCommand.Parameters.AddWithValue("@preset", _installerPreset);
+
                 SQLiteDataReader result = installArgumentCommand.ExecuteReader();
 
                 if (result.HasRows)
@@ -61,6 +61,8 @@ namespace HNEAutoInstaller.Models
                         _presetFileList.Add(Convert.ToString(result["FullFileName"]));
                     }
                 }
+
+                dbObject.CloseConnection();
             }
             catch (Exception e)
             {
@@ -70,26 +72,23 @@ namespace HNEAutoInstaller.Models
         }
 
         // Install all files from directory InstallFiles
-        public static void InstallAllFiles()
+        public static void InstallAllFiles(List<String> installList)
         {
-            _fileList = FetchAllFiles();
-
             DatabaseService dbObject = new();
 
             String query = @"SELECT * FROM Files WHERE FullFileName = @fullFileName;";
 
             try
             {
-                if (_fileList != null)
+                dbObject.OpenConnection();
+                if (installList != null)
                 {
-                    for (Int32 i = 0; i < _fileList.Count; i++)
+                    for (Int32 i = 0; i < installList.Count; i++)
                     {
-                        _fullFileName = _fileList[i];
+                        _fullFileName = installList[i];
 
-                        dbObject.OpenConnection();
                         SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
                         installArgumentCommand.Parameters.AddWithValue("@fullFileName", _fullFileName);
-                        dbObject.CloseConnection();
 
                         SQLiteDataReader result = installArgumentCommand.ExecuteReader();
 
@@ -106,6 +105,7 @@ namespace HNEAutoInstaller.Models
                         InstallFile(_fileExtension, _fullFileName, _installArgument, _zipDestination);
                     }
                 }
+                dbObject.CloseConnection();
             }
             catch (Exception e)
             {
@@ -113,7 +113,11 @@ namespace HNEAutoInstaller.Models
             }
         }
 
-        // Install the files
+        public static void InstallAllFolderFiles() => InstallAllFiles(FetchAllFiles());
+
+        public static void InstallPresetFiles() => InstallAllFiles(FetchPresetFiles());
+
+        // Check the file extension then install the files
         public static void InstallFile(String ext, String file, String instArgs, String desti)
         {
             if (ext == "exe")
@@ -136,12 +140,15 @@ namespace HNEAutoInstaller.Models
         private const String InstallFilesFolder = "InstallFiles";
         private const String DatabaseFolder = "Database";
 
-        private static List<String> _fileList = new List<string>();
-        private static List<String> _presetFileList = new List<string>();
+        private static List<String> _fileList = new();
+        private static List<String> _presetFileList = new();
+
         private static String _fullFileName = String.Empty;
         private static String _installArgument = String.Empty;
         private static String _fileExtension = String.Empty;
         private static String _zipFrom = String.Empty;
         private static String _zipDestination = String.Empty;
+
+        private static Int32 _installerPreset = 0;
     }
 }
