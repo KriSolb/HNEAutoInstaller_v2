@@ -8,6 +8,18 @@
     <StartupObject></StartupObject>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\ksolb\Source\Repos\KriSolb\HNEAutoInstaller_v2\HNEAutoInstaller\HNEAutoInstaller.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Caliburn.Micro" Version="4.0.173" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />
@@ -17,11 +29,18 @@
     <PackageReference Include="Narumikazuchi.Collections.Abstract" Version="1.0.0" />
     <PackageReference Include="Narumikazuchi.Windows" Version="2.2.0" />
     <PackageReference Include="SQLitePCLRaw.core" Version="2.0.6" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.354">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.Data.SQLite" Version="1.0.115" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Database\database.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="InstallFiles\7z1900-x64.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="InstallFiles\test.txt">

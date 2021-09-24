@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HNEAutoInstaller</name>
+    </assembly>
+    <members>
+        <member name="T:HNEAutoInstaller.App">
+            <summary>
+            Interaction logic for App.xaml.
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:HNEAutoInstaller.Bootstrapper">
+            <summary>
+            Caliburn.Micro class for entry-point of app.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.Bootstrapper.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:HNEAutoInstaller.Bootstrapper"/> class.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.Bootstrapper.OnStartup(System.Object,System.Windows.StartupEventArgs)">
+            <summary>
+            OnStartup, define what view model to use, when app starts.
+            </summary>
+            <param name="sender"> Object sender. </param>
+            <param name="e"> Startup event arguments. </param>
+        </member>
+        <member name="T:HNEAutoInstaller.Models.DatabaseHandler">
+            <summary>
+            Handling database requests.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.Models.DatabaseHandler.FetchInstallArguments(System.String)">
+            <summary>
+            Fetch install arguments for files from database.
+            </summary>
+            <param name="filename"> Given file name. </param>
+            <returns> String array. </returns>
+        </member>
+        <member name="T:HNEAutoInstaller.Models.FileHandler">
+            <summary>
+            Class FileHandler models file handling specific methods.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.Models.FileHandler.CreateFolders">
+            <summary>
+            Method for creating folders, if they dont already exist.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.Models.FileHandler.FetchAllFiles">
+            <summary>
+            Fetch all files from InstallFiles folder.
+            </summary>
+            <returns> Returns filenames in folder as string-list.</returns>
+        </member>
+        <member name="M:HNEAutoInstaller.Models.FileHandler.FetchPresetFiles">
+            <summary>
+            Fetch all files with a specific preset.
+            </summary>
+            <returns> Returns filenames with specific preset as string-list.</returns>
+        </member>
+        <member name="M:HNEAutoInstaller.Models.FileHandler.InstallAllFiles(System.Collections.Generic.List{System.String})">
+            <summary>
+            Install all files from param string-list. Fetch filename, install args and destination from database.
+            </summary>
+            <param name="installList">Given string list.</param>
+        </member>
+        <member name="M:HNEAutoInstaller.Models.FileHandler.InstallAllFolderFiles">
+            <summary>
+            Install/Execute all files from folder after fetching all files from folder.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.Models.FileHandler.InstallPresetFiles">
+            <summary>
+            Install/Execute all files with a specific preset after fetching preset files from database.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.Models.FileHandler.InstallFile(System.String,System.String,System.String,System.String)">
+            <summary>
+            Install/execute/unpack files, check what kind of file it is.
+            </summary>
+            <param name="ext">file extention.</param>
+            <param name="file">file name.</param>
+            <param name="instArgs">install arguments.</param>
+            <param name="desti">destination (for zip).</param>
+        </member>
+        <member name="T:HNEAutoInstaller.Services.DatabaseService">
+            <summary>
+            Class DatabaseService models database main services.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.Services.DatabaseService.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:HNEAutoInstaller.Services.DatabaseService"/> class.
+            </summary>
+        </member>
+        <member name="P:HNEAutoInstaller.Services.DatabaseService.DbConnection">
+            <summary>
+            Gets and sets for DbConnection.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.Services.DatabaseService.OpenConnection">
+            <summary>
+            Try to open connection to database.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.Services.DatabaseService.CloseConnection">
+            <summary>
+            Try to close connection to database.
+            </summary>
+        </member>
+        <member name="T:HNEAutoInstaller.ViewModels.ShellViewModel">
+            <summary>
+            Caliburn.Micro main view model.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.ViewModels.ShellViewModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:HNEAutoInstaller.ViewModels.ShellViewModel"/> class.
+            </summary>
+        </member>
+        <member name="T:HNEAutoInstaller.Views.ShellView">
+            <summary>
+            Interaction logic for MainWindow.xaml.
+            </summary>
+            <summary>
+            ShellView
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.Views.ShellView.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:HNEAutoInstaller.Views.ShellView"/> class.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.Views.ShellView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
+            </summary>
+        </member>
+    </members>
+</doc>
