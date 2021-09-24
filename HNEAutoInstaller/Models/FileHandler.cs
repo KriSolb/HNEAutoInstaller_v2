@@ -18,25 +18,15 @@ namespace HNEAutoInstaller.Models
     /// </summary>
     public static class FileHandler
     {
-        // basic ressources
         private const String InstallFilesFolder = "InstallFiles";
-
         private const String DatabaseFolder = "Database";
-
-        // for fetching
         private static List<String> _fileList = new();
-
         private static List<String> _presetFileList = new();
-
-        // for installer
         private static String _fullFileName = String.Empty;
-
         private static String _installArgument = String.Empty;
         private static String _fileExtension = String.Empty;
         private static String _zipSource = String.Empty;
         private static String _zipTarget = String.Empty;
-
-        // testing
         private static Int32 _installerPreset = 0;
 
         /// <summary>
