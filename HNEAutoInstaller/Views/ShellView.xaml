@@ -12,6 +12,63 @@
         WindowStartupLocation="CenterScreen"
         Background="#004d3d">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="20" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <!-- Row 1 -->
+
+        <!-- Row 2 -->
+
+        <!-- Row 3 -->
+        <Label
+            Grid.Row="3"
+            Grid.Column="1"
+            MinWidth="100"
+            Background="White"
+            Margin="1">
+            Presets
+        </Label>
+
+        <!-- Row 4 -->
+        <ComboBox
+            x:Name="SvmFilesPreset"
+            Grid.Row="4"
+            Grid.Column="1"
+            SelectedIndex="0"
+            Margin="1">
+        </ComboBox>
+
+        <!-- Row 5 -->
+        <Button
+            x:Name="SVMInstallButton"
+            Grid.Row="5"
+            Grid.Column="1"
+            Margin="1">
+            Install
+        </Button>
+
+        <!-- Row 6 -->
+        <ContentControl
+            x:Name="ActiveItem"
+            Grid.Row="6"
+            Grid.Column="1"
+            Grid.ColumnSpan="5">
+        </ContentControl>
     </Grid>
 </Window>

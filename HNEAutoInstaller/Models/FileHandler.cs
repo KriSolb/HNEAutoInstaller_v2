@@ -16,10 +16,10 @@ namespace HNEAutoInstaller.Models
     /// <summary>
     /// Class FileHandler models file handling specific methods.
     /// </summary>
-    public static class FileHandler
+    public class FileHandler : Narumikazuchi.Singleton
     {
-        private const String InstallFilesFolder = "InstallFiles";
-        private const String DatabaseFolder = "Database";
+        private const String InstallFilesFolder = "InstallFiles";   // ok.
+        private const String DatabaseFolder = "Database";           // ok.
         private static List<String> _fileList = new();
         private static List<String> _presetFileList = new();
         private static String _fullFileName = String.Empty;
@@ -27,38 +27,55 @@ namespace HNEAutoInstaller.Models
         private static String _fileExtension = String.Empty;
         private static String _zipSource = String.Empty;
         private static String _zipTarget = String.Empty;
-        private static Int32 _installerPreset = 0;
+        private static Int32 _installerPreset = 1;
+        private static List<String> _dbFileList = new();
 
-        /// <summary>
-        /// Method for creating folders, if they dont already exist.
-        /// </summary>
-        public static void CreateFolders()
+        private FileHandler()
         {
-            try
-            {
-                DirectoryInfo working = new(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-                working.CreateSubdirectory(InstallFilesFolder);
-                working.CreateSubdirectory(DatabaseFolder);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
         }
 
         /// <summary>
-        /// Fetch all files from InstallFiles folder.
+        /// Event action for logging to child view.
+        /// </summary>
+        public event Action<String> LogToViewModel;
+
+        /// <summary>
+        /// Fetch all files from InstallFiles folder. Compare to database.
         /// </summary>
         /// <returns> Returns filenames in folder as string-list.</returns>
-        public static List<String> FetchAllFiles()
+        public List<String> FetchAllFiles()
         {
             try
             {
                 _fileList = Directory.GetFiles(InstallFilesFolder).Select(Path.GetFileName).ToList();
+
+                DatabaseService dbObject = new();
+                String query = @"SELECT * FROM Files";
+                dbObject.OpenConnection();
+                SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
+                SQLiteDataReader result = installArgumentCommand.ExecuteReader();
+                if (result.HasRows)
+                {
+                    while (result.Read())
+                    {
+                        _dbFileList.Add(result["FullFileName"].ToString());
+                    }
+                }
+
+                dbObject.CloseConnection();
+                List<String> tempListExcept = _fileList.Except(_dbFileList).ToList();
+
+                foreach (String x in tempListExcept)
+                {
+                    this.LogToViewModel?.Invoke("\n" + x + " not found\n");
+                }
+
+                List<String> tempListIntersect = _dbFileList.Intersect(_fileList).ToList();
+                return tempListIntersect;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                this.LogToViewModel?.Invoke(e.ToString());
             }
 
             return _fileList;
@@ -68,16 +85,20 @@ namespace HNEAutoInstaller.Models
         /// Fetch all files with a specific preset.
         /// </summary>
         /// <returns> Returns filenames with specific preset as string-list.</returns>
-        public static List<String> FetchPresetFiles()
+        public List<String> FetchPresetFiles()
         {
             try
             {
+                List<String> presetFileList = new();
                 DatabaseService dbObject = new();
-                String query = @"SELECT * FROM Files WHERE Preset = @preset;";
+
+                String query = @"SELECT Files.FullFileName FROM Files INNER JOIN Files_Presets ON Files_Presets.presets_id = @presets_id WHERE Files_Presets.files_id = Files.files_id;";
 
                 dbObject.OpenConnection();
+
                 SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
-                installArgumentCommand.Parameters.AddWithValue("@preset", _installerPreset);
+
+                installArgumentCommand.Parameters.AddWithValue("@presets_id", _installerPreset);
 
                 SQLiteDataReader result = installArgumentCommand.ExecuteReader();
 
@@ -85,15 +106,17 @@ namespace HNEAutoInstaller.Models
                 {
                     while (result.Read())
                     {
-                        _presetFileList.Add(Convert.ToString(result["FullFileName"]));
+                        presetFileList.Add(result["FullFileName"].ToString());
                     }
                 }
 
                 dbObject.CloseConnection();
+
+                _presetFileList = presetFileList;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                this.LogToViewModel?.Invoke(e.ToString());
             }
 
             return _presetFileList;
@@ -103,7 +126,7 @@ namespace HNEAutoInstaller.Models
         /// Install all files from param string-list. Fetch filename, install args and destination from database.
         /// </summary>
         /// <param name="installList">Given string list.</param>
-        public static void InstallAllFiles(List<String> installList)
+        public void InstallAllFiles(List<String> installList)
         {
             DatabaseService dbObject = new();
 
@@ -117,6 +140,9 @@ namespace HNEAutoInstaller.Models
                     for (Int32 i = 0; i < installList.Count; i++)
                     {
                         _fullFileName = installList[i];
+                        _fileExtension = String.Empty;
+                        _installArgument = String.Empty;
+                        _zipTarget = String.Empty;
 
                         SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
                         installArgumentCommand.Parameters.AddWithValue("@fullFileName", _fullFileName);
@@ -131,9 +157,9 @@ namespace HNEAutoInstaller.Models
                                 _installArgument = result["Arguments"].ToString();
                                 _zipTarget = result["Destination"].ToString();
                             }
-                        }
 
-                        InstallFile(_fileExtension, _fullFileName, _installArgument, _zipTarget);
+                            this.InstallFile(_fileExtension, _fullFileName, _installArgument, _zipTarget);
+                        }
                     }
                 }
 
@@ -146,14 +172,28 @@ namespace HNEAutoInstaller.Models
         }
 
         /// <summary>
-        /// Install/Execute all files from folder after fetching all files from folder.
+        /// Method for creating folders, if they dont already exist.
         /// </summary>
-        public static void InstallAllFolderFiles() => InstallAllFiles(FetchAllFiles());
+        public void CreateFolders()
+        {
+            try
+            {
+                DirectoryInfo working = new(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+                working.CreateSubdirectory(InstallFilesFolder);
+                this.LogToViewModel?.Invoke(InstallFilesFolder + " folder created.\n");
+                working.CreateSubdirectory(DatabaseFolder);
+                this.LogToViewModel?.Invoke(DatabaseFolder + " folder created.\n");
+            }
+            catch (Exception e)
+            {
+                this.LogToViewModel?.Invoke(e.ToString());
+            }
+        }
 
         /// <summary>
-        /// Install/Execute all files with a specific preset after fetching preset files from database.
+        /// Install/Execute all files from folder after fetching all files from folder.
         /// </summary>
-        public static void InstallPresetFiles() => InstallAllFiles(FetchPresetFiles());
+        public void InstallAllFolderFiles() => this.InstallAllFiles(this.FetchAllFiles());
 
         /// <summary>
         /// Install/execute/unpack files, check what kind of file it is.
@@ -162,22 +202,39 @@ namespace HNEAutoInstaller.Models
         /// <param name="file">file name.</param>
         /// <param name="instArgs">install arguments.</param>
         /// <param name="desti">destination (for zip).</param>
-        public static void InstallFile(String ext, String file, String instArgs, String desti)
+        public void InstallFile(String ext, String file, String instArgs, String desti)
         {
             if (ext == "exe")
             {
-                Process p = new();
-                p.StartInfo.FileName = $"{InstallFilesFolder}" + "\\" + $"{file}";
-                p.StartInfo.Arguments = $"{instArgs}";
-                p.Start();
-                p.WaitForExit();
+                try
+                {
+                    this.LogToViewModel?.Invoke("\nStarting: " + file + "\n");
+                    Process p = new();
+                    p.StartInfo.FileName = $"{InstallFilesFolder}" + "\\" + $"{file}";
+                    p.StartInfo.Arguments = $"{instArgs}";
+                    p.Start();
+                    p.WaitForExit();
+                    this.LogToViewModel?.Invoke("Installed succesfully: " + file + "\n");
+                    this.LogToViewModel?.Invoke("...");
+                }
+                catch (Exception e)
+                {
+                    this.LogToViewModel?.Invoke("..." + e.ToString());
+                }
             }
-
-            if (ext == "zip")
+            else if (ext == "zip")
             {
-                _zipSource = $"{InstallFilesFolder}" + "\\" + $"{file}";
+                try
+                {
+                    this.LogToViewModel?.Invoke("\nUnpacking: " + file + "." + " to " + desti);
+                    _zipSource = $"{InstallFilesFolder}" + "\\" + $"{file}";
 
-                System.IO.Compression.ZipFile.ExtractToDirectory(_zipSource, desti);
+                    System.IO.Compression.ZipFile.ExtractToDirectory(_zipSource, desti);
+                }
+                catch (Exception e)
+                {
+                    this.LogToViewModel?.Invoke("..." + e.ToString());
+                }
             }
         }
     }

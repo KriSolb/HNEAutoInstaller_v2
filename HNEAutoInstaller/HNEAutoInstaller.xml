@@ -39,39 +39,21 @@
             <param name="sender"> Object sender. </param>
             <param name="e"> Startup event arguments. </param>
         </member>
-        <member name="T:HNEAutoInstaller.Models.DatabaseHandler">
-            <summary>
-            Handling database requests.
-            </summary>
-        </member>
-        <member name="M:HNEAutoInstaller.Models.DatabaseHandler.FetchInstallArguments(System.String)">
-            <summary>
-            Fetch install arguments for files from database.
-            </summary>
-            <param name="filename"> Given file name. </param>
-            <returns> String array. </returns>
-        </member>
         <member name="T:HNEAutoInstaller.Models.FileHandler">
             <summary>
             Class FileHandler models file handling specific methods.
             </summary>
         </member>
-        <member name="M:HNEAutoInstaller.Models.FileHandler.CreateFolders">
+        <member name="E:HNEAutoInstaller.Models.FileHandler.LogToViewModel">
             <summary>
-            Method for creating folders, if they dont already exist.
+            Event action for logging to child view.
             </summary>
         </member>
         <member name="M:HNEAutoInstaller.Models.FileHandler.FetchAllFiles">
             <summary>
-            Fetch all files from InstallFiles folder.
+            Fetch all files from InstallFiles folder. Compare to database.
             </summary>
             <returns> Returns filenames in folder as string-list.</returns>
-        </member>
-        <member name="M:HNEAutoInstaller.Models.FileHandler.FetchPresetFiles">
-            <summary>
-            Fetch all files with a specific preset.
-            </summary>
-            <returns> Returns filenames with specific preset as string-list.</returns>
         </member>
         <member name="M:HNEAutoInstaller.Models.FileHandler.InstallAllFiles(System.Collections.Generic.List{System.String})">
             <summary>
@@ -79,14 +61,14 @@
             </summary>
             <param name="installList">Given string list.</param>
         </member>
+        <member name="M:HNEAutoInstaller.Models.FileHandler.CreateFolders">
+            <summary>
+            Method for creating folders, if they dont already exist.
+            </summary>
+        </member>
         <member name="M:HNEAutoInstaller.Models.FileHandler.InstallAllFolderFiles">
             <summary>
             Install/Execute all files from folder after fetching all files from folder.
-            </summary>
-        </member>
-        <member name="M:HNEAutoInstaller.Models.FileHandler.InstallPresetFiles">
-            <summary>
-            Install/Execute all files with a specific preset after fetching preset files from database.
             </summary>
         </member>
         <member name="M:HNEAutoInstaller.Models.FileHandler.InstallFile(System.String,System.String,System.String,System.String)">
@@ -97,6 +79,12 @@
             <param name="file">file name.</param>
             <param name="instArgs">install arguments.</param>
             <param name="desti">destination (for zip).</param>
+        </member>
+        <member name="M:HNEAutoInstaller.Models.FileHandler.FetchPresetFiles">
+            <summary>
+            Fetch all files with a specific preset.
+            </summary>
+            <returns> Returns filenames with specific preset as string-list.</returns>
         </member>
         <member name="T:HNEAutoInstaller.Services.DatabaseService">
             <summary>
@@ -123,6 +111,31 @@
             Try to close connection to database.
             </summary>
         </member>
+        <member name="T:HNEAutoInstaller.ViewModels.ActiveChildViewModel">
+            <summary>
+            ChildViewModel for user output.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.ViewModels.ActiveChildViewModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:HNEAutoInstaller.ViewModels.ActiveChildViewModel"/> class.
+            </summary>
+        </member>
+        <member name="P:HNEAutoInstaller.ViewModels.ActiveChildViewModel.AcvmFileList">
+            <summary>
+            Gets string-list of all files in installation folder.
+            </summary>
+        </member>
+        <member name="P:HNEAutoInstaller.ViewModels.ActiveChildViewModel.SelectedAcvmFiles">
+            <summary>
+            Gets or Sets selected items/files in child view.
+            </summary>
+        </member>
+        <member name="P:HNEAutoInstaller.ViewModels.ActiveChildViewModel.AcvmOutput">
+            <summary>
+            Gets or sets output.
+            </summary>
+        </member>
         <member name="T:HNEAutoInstaller.ViewModels.ShellViewModel">
             <summary>
             Caliburn.Micro main view model.
@@ -131,6 +144,39 @@
         <member name="M:HNEAutoInstaller.ViewModels.ShellViewModel.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:HNEAutoInstaller.ViewModels.ShellViewModel"/> class.
+            </summary>
+        </member>
+        <member name="P:HNEAutoInstaller.ViewModels.ShellViewModel.SvmFilesPreset">
+            <summary>
+            Gets or sets presets.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.ViewModels.ShellViewModel.SVMInstallButton">
+            <summary>
+            Call function for installing all files from folder.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.ViewModels.ShellViewModel.SvmReload">
+            <summary>
+            Activate child view in main view.
+            </summary>
+        </member>
+        <member name="T:HNEAutoInstaller.Views.ActiveChildView">
+            <summary>
+            Interaction logic for ActiveChildView.xaml.
+            </summary>
+            <summary>
+            ActiveChildView
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.Views.ActiveChildView.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:HNEAutoInstaller.Views.ActiveChildView"/> class.
+            </summary>
+        </member>
+        <member name="M:HNEAutoInstaller.Views.ActiveChildView.InitializeComponent">
+            <summary>
+            InitializeComponent
             </summary>
         </member>
         <member name="T:HNEAutoInstaller.Views.ShellView">
