@@ -55,16 +55,18 @@
             </summary>
             <returns> Returns filenames in folder as string-list.</returns>
         </member>
+        <member name="M:HNEAutoInstaller.Models.FileHandler.FetchPresetFiles(System.Int32)">
+            <summary>
+            Fetch all files with a specific preset.
+            </summary>
+            <param name="preset">integer of presets_id.</param>
+            <returns> Returns filenames with specific preset as string-list.</returns>
+        </member>
         <member name="M:HNEAutoInstaller.Models.FileHandler.InstallAllFiles(System.Collections.Generic.List{System.String})">
             <summary>
             Install all files from param string-list. Fetch filename, install args and destination from database.
             </summary>
             <param name="installList">Given string list.</param>
-        </member>
-        <member name="M:HNEAutoInstaller.Models.FileHandler.CreateFolders">
-            <summary>
-            Method for creating folders, if they dont already exist.
-            </summary>
         </member>
         <member name="M:HNEAutoInstaller.Models.FileHandler.InstallAllFolderFiles">
             <summary>
@@ -80,11 +82,10 @@
             <param name="instArgs">install arguments.</param>
             <param name="desti">destination (for zip).</param>
         </member>
-        <member name="M:HNEAutoInstaller.Models.FileHandler.FetchPresetFiles">
+        <member name="M:HNEAutoInstaller.Models.FileHandler.CreateFolders">
             <summary>
-            Fetch all files with a specific preset.
+            Method for creating folders, if they dont already exist.
             </summary>
-            <returns> Returns filenames with specific preset as string-list.</returns>
         </member>
         <member name="T:HNEAutoInstaller.Services.DatabaseService">
             <summary>
@@ -151,7 +152,7 @@
             Gets or sets presets.
             </summary>
         </member>
-        <member name="M:HNEAutoInstaller.ViewModels.ShellViewModel.SVMInstallButton">
+        <member name="M:HNEAutoInstaller.ViewModels.ShellViewModel.SvmInstallButton">
             <summary>
             Call function for installing all files from folder.
             </summary>

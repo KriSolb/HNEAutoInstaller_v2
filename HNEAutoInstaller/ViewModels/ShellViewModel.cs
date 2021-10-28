@@ -47,11 +47,11 @@ namespace HNEAutoInstaller.ViewModels
         /// <summary>
         /// Call function for installing all files from folder.
         /// </summary>
-        public void SVMInstallButton()
+        public static void SvmInstallButton()
         {
             FileHandler fileHandler = Singleton<FileHandler>.Instance;
 
-            List<String> templist = fileHandler.FetchPresetFiles();
+            List<String> templist = fileHandler.FetchPresetFiles(1);
 
             fileHandler.InstallAllFiles(templist);
         }

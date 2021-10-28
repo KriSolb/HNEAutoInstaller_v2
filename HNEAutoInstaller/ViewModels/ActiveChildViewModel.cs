@@ -42,7 +42,7 @@ namespace HNEAutoInstaller.ViewModels
         /// <summary>
         /// Gets or Sets selected items/files in child view.
         /// </summary>
-        public List<String> SelectedAcvmFiles
+        public List<String> SelectedAcvmFiles // macht gerade goar nüscht, außer bytes belegen.
         {
             get
             {
@@ -54,7 +54,7 @@ namespace HNEAutoInstaller.ViewModels
                 if (this._selectedAcvmFiles != value)
                 {
                     FileHandler fileHandler = Singleton<FileHandler>.Instance;
-                    this._selectedAcvmFiles = fileHandler.FetchPresetFiles();
+                    this._selectedAcvmFiles = fileHandler.FetchPresetFiles(2);
                     this._selectedAcvmFiles = value;
 
                     this.NotifyOfPropertyChange(nameof(this.SelectedAcvmFiles));

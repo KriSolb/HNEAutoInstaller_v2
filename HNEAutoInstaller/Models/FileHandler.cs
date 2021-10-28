@@ -20,15 +20,16 @@ namespace HNEAutoInstaller.Models
     {
         private const String InstallFilesFolder = "InstallFiles";   // ok.
         private const String DatabaseFolder = "Database";           // ok.
+
         private static List<String> _fileList = new();
         private static List<String> _presetFileList = new();
+        private static List<String> _dbFileList = new();
+
         private static String _fullFileName = String.Empty;
         private static String _installArgument = String.Empty;
         private static String _fileExtension = String.Empty;
         private static String _zipSource = String.Empty;
         private static String _zipTarget = String.Empty;
-        private static Int32 _installerPreset = 1;
-        private static List<String> _dbFileList = new();
 
         private FileHandler()
         {
@@ -63,14 +64,27 @@ namespace HNEAutoInstaller.Models
                 }
 
                 dbObject.CloseConnection();
-                List<String> tempListExcept = _fileList.Except(_dbFileList).ToList();
 
-                foreach (String x in tempListExcept)
+                this.LogToViewModel?.Invoke("All files in folder:\n");
+                foreach (String x in _fileList)
                 {
-                    this.LogToViewModel?.Invoke("\n" + x + " not found\n");
+                    this.LogToViewModel?.Invoke(x + "\n");
                 }
 
+                this.LogToViewModel?.Invoke("\nFiles found in folder, but not in database:\n");
+                List<String> tempListExcept = _fileList.Except(_dbFileList).ToList();
+                foreach (String x in tempListExcept)
+                {
+                    this.LogToViewModel?.Invoke(x + "\n");
+                }
+
+                this.LogToViewModel?.Invoke("\nUsable:\n");
                 List<String> tempListIntersect = _dbFileList.Intersect(_fileList).ToList();
+                foreach (String x in tempListIntersect)
+                {
+                    this.LogToViewModel?.Invoke("OK: " + x + "\n");
+                }
+
                 return tempListIntersect;
             }
             catch (Exception e)
@@ -84,8 +98,9 @@ namespace HNEAutoInstaller.Models
         /// <summary>
         /// Fetch all files with a specific preset.
         /// </summary>
+        /// <param name="preset">integer of presets_id.</param>
         /// <returns> Returns filenames with specific preset as string-list.</returns>
-        public List<String> FetchPresetFiles()
+        public List<String> FetchPresetFiles(Int32 preset)
         {
             try
             {
@@ -98,7 +113,7 @@ namespace HNEAutoInstaller.Models
 
                 SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
 
-                installArgumentCommand.Parameters.AddWithValue("@presets_id", _installerPreset);
+                installArgumentCommand.Parameters.AddWithValue("@presets_id", preset);
 
                 SQLiteDataReader result = installArgumentCommand.ExecuteReader();
 
@@ -172,25 +187,6 @@ namespace HNEAutoInstaller.Models
         }
 
         /// <summary>
-        /// Method for creating folders, if they dont already exist.
-        /// </summary>
-        public void CreateFolders()
-        {
-            try
-            {
-                DirectoryInfo working = new(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-                working.CreateSubdirectory(InstallFilesFolder);
-                this.LogToViewModel?.Invoke(InstallFilesFolder + " folder created.\n");
-                working.CreateSubdirectory(DatabaseFolder);
-                this.LogToViewModel?.Invoke(DatabaseFolder + " folder created.\n");
-            }
-            catch (Exception e)
-            {
-                this.LogToViewModel?.Invoke(e.ToString());
-            }
-        }
-
-        /// <summary>
         /// Install/Execute all files from folder after fetching all files from folder.
         /// </summary>
         public void InstallAllFolderFiles() => this.InstallAllFiles(this.FetchAllFiles());
@@ -213,9 +209,9 @@ namespace HNEAutoInstaller.Models
                     p.StartInfo.FileName = $"{InstallFilesFolder}" + "\\" + $"{file}";
                     p.StartInfo.Arguments = $"{instArgs}";
                     p.Start();
+                    this.LogToViewModel?.Invoke("...\n");
                     p.WaitForExit();
                     this.LogToViewModel?.Invoke("Installed succesfully: " + file + "\n");
-                    this.LogToViewModel?.Invoke("...");
                 }
                 catch (Exception e)
                 {
@@ -235,6 +231,28 @@ namespace HNEAutoInstaller.Models
                 {
                     this.LogToViewModel?.Invoke("..." + e.ToString());
                 }
+            }
+            else
+            {
+                this.LogToViewModel?.Invoke("\nFailure: " + file + "\n");
+            }
+
+        }
+
+        /// <summary>
+        /// Method for creating folders, if they dont already exist.
+        /// </summary>
+        public void CreateFolders()
+        {
+            try
+            {
+                DirectoryInfo working = new(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+                working.CreateSubdirectory(InstallFilesFolder);
+                working.CreateSubdirectory(DatabaseFolder);
+            }
+            catch (Exception e)
+            {
+                this.LogToViewModel?.Invoke(e.ToString());
             }
         }
     }

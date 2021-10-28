@@ -42,7 +42,7 @@
             MinWidth="100"
             Background="White"
             Margin="1">
-            Presets
+            Autoinstall
         </Label>
 
         <!-- Row 4 -->
@@ -56,7 +56,7 @@
 
         <!-- Row 5 -->
         <Button
-            x:Name="SVMInstallButton"
+            x:Name="SvmInstallButton"
             Grid.Row="5"
             Grid.Column="1"
             Margin="1">
