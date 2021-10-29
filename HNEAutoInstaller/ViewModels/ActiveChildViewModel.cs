@@ -16,7 +16,8 @@ namespace HNEAutoInstaller.ViewModels
     public class ActiveChildViewModel : Screen
     {
         private String _acvmOutput = String.Empty;
-        private List<String> _selectedAcvmFiles = new();
+        private List<String> _acvmFileList = new();
+        private List<String> _selectedAcvmFileList = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActiveChildViewModel"/> class.
@@ -28,36 +29,43 @@ namespace HNEAutoInstaller.ViewModels
         }
 
         /// <summary>
-        /// Gets string-list of all files in installation folder.
+        /// Gets or Sets string-list of all files in installation folder.
         /// </summary>
-        public static List<String> AcvmFileList
+        public List<String> AcvmFileList
         {
             get
             {
                 FileHandler fileHandler = Singleton<FileHandler>.Instance;
-                return fileHandler.FetchAllFiles();
+                this._acvmFileList = fileHandler.FetchAllFiles();
+
+                return this._acvmFileList;
+            }
+
+            set
+            {
+
+                this._acvmFileList = value;
+                this.NotifyOfPropertyChange(() => this.AcvmFileList);
             }
         }
 
         /// <summary>
         /// Gets or Sets selected items/files in child view.
         /// </summary>
-        public List<String> SelectedAcvmFiles // macht gerade goar nüscht, außer bytes belegen.
+        public List<String> SelectedAcvmFileList // macht gerade goar nüscht, außer bytes belegen.
         {
             get
             {
-                return this._selectedAcvmFiles;
+                return this._selectedAcvmFileList;
             }
 
             set
             {
-                if (this._selectedAcvmFiles != value)
+                if (this._selectedAcvmFileList != value)
                 {
-                    FileHandler fileHandler = Singleton<FileHandler>.Instance;
-                    this._selectedAcvmFiles = fileHandler.FetchPresetFiles(2);
-                    this._selectedAcvmFiles = value;
+                    this._selectedAcvmFileList = value;
 
-                    this.NotifyOfPropertyChange(nameof(this.SelectedAcvmFiles));
+                    this.NotifyOfPropertyChange(nameof(this.SelectedAcvmFileList));
                 }
             }
         }

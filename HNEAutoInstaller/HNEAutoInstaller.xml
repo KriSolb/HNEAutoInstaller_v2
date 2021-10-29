@@ -82,6 +82,19 @@
             <param name="instArgs">install arguments.</param>
             <param name="desti">destination (for zip).</param>
         </member>
+        <member name="M:HNEAutoInstaller.Models.FileHandler.FetchPresetNames">
+            <summary>
+            Fetch all preset names from database.
+            </summary>
+            <returns> Returns filenames with specific preset as string-list.</returns>
+        </member>
+        <member name="M:HNEAutoInstaller.Models.FileHandler.FetchPresetID(System.String)">
+            <summary>
+            Fetch the ID of a preset by its name.
+            </summary>
+            <param name="presetName">given preset name.</param>
+            <returns> Returns filenames with specific preset as string-list.</returns>
+        </member>
         <member name="M:HNEAutoInstaller.Models.FileHandler.CreateFolders">
             <summary>
             Method for creating folders, if they dont already exist.
@@ -112,6 +125,11 @@
             Try to close connection to database.
             </summary>
         </member>
+        <member name="T:HNEAutoInstaller.Services.MessengerServices">
+            <summary>
+            Class MessengerServices for communication between ViewModels.
+            </summary>
+        </member>
         <member name="T:HNEAutoInstaller.ViewModels.ActiveChildViewModel">
             <summary>
             ChildViewModel for user output.
@@ -124,10 +142,10 @@
         </member>
         <member name="P:HNEAutoInstaller.ViewModels.ActiveChildViewModel.AcvmFileList">
             <summary>
-            Gets string-list of all files in installation folder.
+            Gets or Sets string-list of all files in installation folder.
             </summary>
         </member>
-        <member name="P:HNEAutoInstaller.ViewModels.ActiveChildViewModel.SelectedAcvmFiles">
+        <member name="P:HNEAutoInstaller.ViewModels.ActiveChildViewModel.SelectedAcvmFileList">
             <summary>
             Gets or Sets selected items/files in child view.
             </summary>
@@ -147,14 +165,19 @@
             Initializes a new instance of the <see cref="T:HNEAutoInstaller.ViewModels.ShellViewModel"/> class.
             </summary>
         </member>
-        <member name="P:HNEAutoInstaller.ViewModels.ShellViewModel.SvmFilesPreset">
+        <member name="P:HNEAutoInstaller.ViewModels.ShellViewModel.SvmPresets">
             <summary>
-            Gets or sets presets.
+            Gets preset names.
+            </summary>
+        </member>
+        <member name="P:HNEAutoInstaller.ViewModels.ShellViewModel.SelectedSvmPresets">
+            <summary>
+            Gets or Sets preset IDs.
             </summary>
         </member>
         <member name="M:HNEAutoInstaller.ViewModels.ShellViewModel.SvmInstallButton">
             <summary>
-            Call function for installing all files from folder.
+            Call function for installing all presets files from folder.
             </summary>
         </member>
         <member name="M:HNEAutoInstaller.ViewModels.ShellViewModel.SvmReload">

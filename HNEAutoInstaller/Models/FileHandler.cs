@@ -2,6 +2,7 @@
 // Copyright (c) Kristof Solbrig - HNE. All rights reserved.
 // </copyright>
 
+using Caliburn.Micro;
 using HNEAutoInstaller.Services;
 using System;
 using System.Collections.Generic;
@@ -236,7 +237,56 @@ namespace HNEAutoInstaller.Models
             {
                 this.LogToViewModel?.Invoke("\nFailure: " + file + "\n");
             }
+        }
 
+        /// <summary>
+        /// Fetch all preset names from database.
+        /// </summary>
+        /// <returns> Returns filenames with specific preset as string-list.</returns>
+        public BindableCollection<String> FetchPresetNames()
+        {
+            BindableCollection<String> presetNames = new();
+            DatabaseService dbObject = new();
+            String query = @"SELECT * FROM Presets";
+            dbObject.OpenConnection();
+            SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
+            SQLiteDataReader result = installArgumentCommand.ExecuteReader();
+            if (result.HasRows)
+            {
+                while (result.Read())
+                {
+                    presetNames.Add(result["PresetName"].ToString());
+                }
+            }
+
+            dbObject.CloseConnection();
+            return presetNames;
+        }
+
+        /// <summary>
+        /// Fetch the ID of a preset by its name.
+        /// </summary>
+        /// <param name="presetName">given preset name.</param>
+        /// <returns> Returns filenames with specific preset as string-list.</returns>
+        public Int64 FetchPresetID(String presetName) // TODO
+        {
+            Int64 presetID = 0;
+            DatabaseService dbObject = new();
+            String query = @"SELECT * FROM Presets WHERE PresetName = @presetName"; // TODO
+            dbObject.OpenConnection();
+            SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
+            installArgumentCommand.Parameters.AddWithValue("@presetName", presetName);
+            SQLiteDataReader result = installArgumentCommand.ExecuteReader();
+            if (result.HasRows)
+            {
+                while (result.Read())
+                {
+                    presetID = (Int64)result["presets_id"];
+                }
+            }
+
+            dbObject.CloseConnection();
+            return presetID;
         }
 
         /// <summary>

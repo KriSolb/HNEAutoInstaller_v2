@@ -15,7 +15,7 @@ namespace HNEAutoInstaller.ViewModels
     /// </summary>
     public class ShellViewModel : Conductor<Object>
     {
-        private BindableCollection<String> _svmFilePreset = new() { "Standard", "GIS" };
+        private String _selectedSvmPresets = "Standard";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShellViewModel"/> class.
@@ -28,30 +28,43 @@ namespace HNEAutoInstaller.ViewModels
         }
 
         /// <summary>
-        /// Gets or sets presets.
+        /// Gets preset names.
         /// </summary>
-        public BindableCollection<String> SvmFilesPreset
+        public BindableCollection<String> SvmPresets
         {
             get
             {
-                return this._svmFilePreset;
-            }
-
-            set
-            {
-                this._svmFilePreset = value;
-                this.NotifyOfPropertyChange(() => this.SvmFilesPreset);
+                FileHandler fileHandler = Singleton<FileHandler>.Instance;
+                return new BindableCollection<String>(fileHandler.FetchPresetNames());
             }
         }
 
         /// <summary>
-        /// Call function for installing all files from folder.
+        /// Gets or Sets preset IDs.
         /// </summary>
-        public static void SvmInstallButton()
+        public String SelectedSvmPresets
+        {
+            get
+            {
+                return this._selectedSvmPresets;
+            }
+
+            set
+            {
+                this._selectedSvmPresets = value;
+                this.NotifyOfPropertyChange(() => this.SelectedSvmPresets);
+            }
+        }
+
+        /// <summary>
+        /// Call function for installing all presets files from folder.
+        /// </summary>
+        public void SvmInstallButton()
         {
             FileHandler fileHandler = Singleton<FileHandler>.Instance;
+            Int64 tempInt = fileHandler.FetchPresetID(this._selectedSvmPresets);
 
-            List<String> templist = fileHandler.FetchPresetFiles(1);
+            List<String> templist = fileHandler.FetchPresetFiles((Int32)tempInt);
 
             fileHandler.InstallAllFiles(templist);
         }
