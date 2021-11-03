@@ -54,9 +54,9 @@ namespace HNEAutoInstaller.Models
 
                 DatabaseService dbObject = new();
                 dbObject.OpenConnection();
-
                 SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
                 SQLiteDataReader result = installArgumentCommand.ExecuteReader();
+
                 if (result.HasRows)
                 {
                     while (result.Read())
@@ -109,7 +109,7 @@ namespace HNEAutoInstaller.Models
                 List<String> presetFileList = new();
                 DatabaseService dbObject = new();
 
-                String query = @"SELECT Files.FullFileName FROM Files INNER JOIN Files_Presets ON Files_Presets.presets_id = @presets_id WHERE Files_Presets.files_id = Files.files_id;";
+                String query = Properties.Resources.FetchPresetFiles;
 
                 dbObject.OpenConnection();
 
@@ -140,6 +140,63 @@ namespace HNEAutoInstaller.Models
         }
 
         /// <summary>
+        /// Fetch all preset names from database.
+        /// </summary>
+        /// <returns> Returns filenames with specific preset as bindable collection.</returns>
+        public BindableCollection<String> FetchPresetNames()
+        {
+            BindableCollection<String> presetNames = new();
+            String query = Properties.Resources.FetchAllPresets;
+
+            DatabaseService dbObject = new();
+            dbObject.OpenConnection();
+            SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
+
+            SQLiteDataReader result = installArgumentCommand.ExecuteReader();
+
+            if (result.HasRows)
+            {
+                while (result.Read())
+                {
+                    presetNames.Add(result["PresetName"].ToString());
+                }
+            }
+
+            dbObject.CloseConnection();
+            return presetNames;
+        }
+
+        /// <summary>
+        /// Fetch the ID of a preset by its name.
+        /// </summary>
+        /// <param name="presetName">given preset name.</param>
+        /// <returns> Returns filenames with specific preset as string-list.</returns>
+        public Int64 FetchPresetID(String presetName) // TODO
+        {
+            Int64 presetID = 0;
+            String query = Properties.Resources.FetchAllPresetNames; // TODO
+
+            DatabaseService dbObject = new();
+            dbObject.OpenConnection();
+            SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
+
+            installArgumentCommand.Parameters.AddWithValue("@presetName", presetName);
+
+            SQLiteDataReader result = installArgumentCommand.ExecuteReader();
+
+            if (result.HasRows)
+            {
+                while (result.Read())
+                {
+                    presetID = (Int64)result["presets_id"];
+                }
+            }
+
+            dbObject.CloseConnection();
+            return presetID;
+        }
+
+        /// <summary>
         /// Install all files from param string-list. Fetch filename, install args and destination from database.
         /// </summary>
         /// <param name="installList">Given string list.</param>
@@ -147,7 +204,7 @@ namespace HNEAutoInstaller.Models
         {
             DatabaseService dbObject = new();
 
-            String query = @"SELECT * FROM Files WHERE FullFileName = @fullFileName;";
+            String query = Properties.Resources.FetchAllFilesByFullFileName;
 
             try
             {
@@ -238,56 +295,6 @@ namespace HNEAutoInstaller.Models
             {
                 this.LogToViewModel?.Invoke("\nFailure: " + file + "\n");
             }
-        }
-
-        /// <summary>
-        /// Fetch all preset names from database.
-        /// </summary>
-        /// <returns> Returns filenames with specific preset as bindable collection.</returns>
-        public BindableCollection<String> FetchPresetNames()
-        {
-            BindableCollection<String> presetNames = new();
-            DatabaseService dbObject = new();
-            String query = @"SELECT * FROM Presets";
-            dbObject.OpenConnection();
-            SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
-            SQLiteDataReader result = installArgumentCommand.ExecuteReader();
-            if (result.HasRows)
-            {
-                while (result.Read())
-                {
-                    presetNames.Add(result["PresetName"].ToString());
-                }
-            }
-
-            dbObject.CloseConnection();
-            return presetNames;
-        }
-
-        /// <summary>
-        /// Fetch the ID of a preset by its name.
-        /// </summary>
-        /// <param name="presetName">given preset name.</param>
-        /// <returns> Returns filenames with specific preset as string-list.</returns>
-        public Int64 FetchPresetID(String presetName) // TODO
-        {
-            Int64 presetID = 0;
-            DatabaseService dbObject = new();
-            String query = @"SELECT * FROM Presets WHERE PresetName = @presetName"; // TODO
-            dbObject.OpenConnection();
-            SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
-            installArgumentCommand.Parameters.AddWithValue("@presetName", presetName);
-            SQLiteDataReader result = installArgumentCommand.ExecuteReader();
-            if (result.HasRows)
-            {
-                while (result.Read())
-                {
-                    presetID = (Int64)result["presets_id"];
-                }
-            }
-
-            dbObject.CloseConnection();
-            return presetID;
         }
 
         /// <summary>

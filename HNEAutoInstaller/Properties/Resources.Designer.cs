@@ -61,11 +61,47 @@ namespace HNEAutoInstaller.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT * FROM Files.
+        ///   Looks up a localized string similar to SELECT * FROM Files;.
         /// </summary>
         internal static string FetchAllFiles {
             get {
                 return ResourceManager.GetString("FetchAllFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT * FROM Files WHERE FullFileName = @fullFileName;.
+        /// </summary>
+        internal static string FetchAllFilesByFullFileName {
+            get {
+                return ResourceManager.GetString("FetchAllFilesByFullFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT * FROM Presets WHERE PresetName = @presetName;.
+        /// </summary>
+        internal static string FetchAllPresetNames {
+            get {
+                return ResourceManager.GetString("FetchAllPresetNames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT * FROM Presets;.
+        /// </summary>
+        internal static string FetchAllPresets {
+            get {
+                return ResourceManager.GetString("FetchAllPresets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT Files.FullFileName FROM Files INNER JOIN Files_Presets ON Files_Presets.presets_id = @presets_id WHERE Files_Presets.files_id = Files.files_id;.
+        /// </summary>
+        internal static string FetchPresetFiles {
+            get {
+                return ResourceManager.GetString("FetchPresetFiles", resourceCulture);
             }
         }
     }

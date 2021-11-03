@@ -118,6 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FetchAllFiles" xml:space="preserve">
-    <value>SELECT * FROM Files</value>
+    <value>SELECT * FROM Files;</value>
+  </data>
+  <data name="FetchAllFilesByFullFileName" xml:space="preserve">
+    <value>SELECT * FROM Files WHERE FullFileName = @fullFileName;</value>
+  </data>
+  <data name="FetchAllPresetNames" xml:space="preserve">
+    <value>SELECT * FROM Presets WHERE PresetName = @presetName;</value>
+  </data>
+  <data name="FetchAllPresets" xml:space="preserve">
+    <value>SELECT * FROM Presets;</value>
+  </data>
+  <data name="FetchPresetFiles" xml:space="preserve">
+    <value>SELECT Files.FullFileName FROM Files INNER JOIN Files_Presets ON Files_Presets.presets_id = @presets_id WHERE Files_Presets.files_id = Files.files_id;</value>
   </data>
 </root>

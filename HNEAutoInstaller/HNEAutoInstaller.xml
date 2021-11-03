@@ -62,6 +62,19 @@
             <param name="preset">integer of presets_id.</param>
             <returns> Returns filenames with specific preset as string-list.</returns>
         </member>
+        <member name="M:HNEAutoInstaller.Models.FileHandler.FetchPresetNames">
+            <summary>
+            Fetch all preset names from database.
+            </summary>
+            <returns> Returns filenames with specific preset as bindable collection.</returns>
+        </member>
+        <member name="M:HNEAutoInstaller.Models.FileHandler.FetchPresetID(System.String)">
+            <summary>
+            Fetch the ID of a preset by its name.
+            </summary>
+            <param name="presetName">given preset name.</param>
+            <returns> Returns filenames with specific preset as string-list.</returns>
+        </member>
         <member name="M:HNEAutoInstaller.Models.FileHandler.InstallAllFiles(System.Collections.Generic.List{System.String})">
             <summary>
             Install all files from param string-list. Fetch filename, install args and destination from database.
@@ -81,19 +94,6 @@
             <param name="file">file name.</param>
             <param name="instArgs">install arguments.</param>
             <param name="desti">destination (for zip).</param>
-        </member>
-        <member name="M:HNEAutoInstaller.Models.FileHandler.FetchPresetNames">
-            <summary>
-            Fetch all preset names from database.
-            </summary>
-            <returns> Returns filenames with specific preset as bindable collection.</returns>
-        </member>
-        <member name="M:HNEAutoInstaller.Models.FileHandler.FetchPresetID(System.String)">
-            <summary>
-            Fetch the ID of a preset by its name.
-            </summary>
-            <param name="presetName">given preset name.</param>
-            <returns> Returns filenames with specific preset as string-list.</returns>
         </member>
         <member name="M:HNEAutoInstaller.Models.FileHandler.CreateFolders">
             <summary>
@@ -118,7 +118,27 @@
         </member>
         <member name="P:HNEAutoInstaller.Properties.Resources.FetchAllFiles">
             <summary>
-              Looks up a localized string similar to SELECT * FROM Files.
+              Looks up a localized string similar to SELECT * FROM Files;.
+            </summary>
+        </member>
+        <member name="P:HNEAutoInstaller.Properties.Resources.FetchAllFilesByFullFileName">
+            <summary>
+              Looks up a localized string similar to SELECT * FROM Files WHERE FullFileName = @fullFileName;.
+            </summary>
+        </member>
+        <member name="P:HNEAutoInstaller.Properties.Resources.FetchAllPresetNames">
+            <summary>
+              Looks up a localized string similar to SELECT * FROM Presets WHERE PresetName = @presetName;.
+            </summary>
+        </member>
+        <member name="P:HNEAutoInstaller.Properties.Resources.FetchAllPresets">
+            <summary>
+              Looks up a localized string similar to SELECT * FROM Presets;.
+            </summary>
+        </member>
+        <member name="P:HNEAutoInstaller.Properties.Resources.FetchPresetFiles">
+            <summary>
+              Looks up a localized string similar to SELECT Files.FullFileName FROM Files INNER JOIN Files_Presets ON Files_Presets.presets_id = @presets_id WHERE Files_Presets.files_id = Files.files_id;.
             </summary>
         </member>
         <member name="T:HNEAutoInstaller.Services.DatabaseService">
