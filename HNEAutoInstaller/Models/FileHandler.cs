@@ -50,10 +50,11 @@ namespace HNEAutoInstaller.Models
             try
             {
                 _fileList = Directory.GetFiles(InstallFilesFolder).Select(Path.GetFileName).ToList();
+                String query = Properties.Resources.FetchAllFiles;
 
                 DatabaseService dbObject = new();
-                String query = @"SELECT * FROM Files";
                 dbObject.OpenConnection();
+
                 SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
                 SQLiteDataReader result = installArgumentCommand.ExecuteReader();
                 if (result.HasRows)
@@ -242,7 +243,7 @@ namespace HNEAutoInstaller.Models
         /// <summary>
         /// Fetch all preset names from database.
         /// </summary>
-        /// <returns> Returns filenames with specific preset as string-list.</returns>
+        /// <returns> Returns filenames with specific preset as bindable collection.</returns>
         public BindableCollection<String> FetchPresetNames()
         {
             BindableCollection<String> presetNames = new();

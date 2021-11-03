@@ -43,7 +43,6 @@ namespace HNEAutoInstaller.ViewModels
 
             set
             {
-
                 this._acvmFileList = value;
                 this.NotifyOfPropertyChange(() => this.AcvmFileList);
             }

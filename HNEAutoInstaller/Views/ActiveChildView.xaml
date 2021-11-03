@@ -21,8 +21,7 @@
         <!-- "Input" -->
         <ListBox
             x:Name="AcvmFileList"
-            SelectedItem="{Binding SelectedAcvmFileList, Mode=OneWay}"
-
+            SelectedItem ="{Binding SelectedAcvmFileList, Mode=OneWay}"
             SelectionMode="Multiple"
             Grid.Column="0"
             Background="White"
