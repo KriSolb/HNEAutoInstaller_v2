@@ -19,8 +19,8 @@ namespace HNEAutoInstaller.Models
     /// </summary>
     public class FileHandler : Narumikazuchi.Singleton
     {
-        private const String InstallFilesFolder = "InstallFiles";   // ok.
-        private const String DatabaseFolder = "Database";           // ok.
+        private const String InstallFilesFolder = "InstallFiles";
+        private const String DatabaseFolder = "Database";
 
         private static List<String> _fileList = new();
         private static List<String> _presetFileList = new();
@@ -50,6 +50,7 @@ namespace HNEAutoInstaller.Models
             try
             {
                 _fileList = Directory.GetFiles(InstallFilesFolder).Select(Path.GetFileName).ToList();
+
                 String query = Properties.Resources.FetchAllFiles;
 
                 DatabaseService dbObject = new();
@@ -272,9 +273,9 @@ namespace HNEAutoInstaller.Models
                     p.WaitForExit();
                     this.LogToViewModel?.Invoke("Installed succesfully: " + file + "\n");
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    this.LogToViewModel?.Invoke("..." + e.ToString());
+                    this.LogToViewModel?.Invoke("\n..." + "Failed to install: " + file);
                 }
             }
             else if (ext == "zip")
@@ -286,14 +287,14 @@ namespace HNEAutoInstaller.Models
 
                     System.IO.Compression.ZipFile.ExtractToDirectory(_zipSource, desti);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    this.LogToViewModel?.Invoke("..." + e.ToString());
+                    this.LogToViewModel?.Invoke("\n..." + "Failed zu unpack: " + file);
                 }
             }
             else
             {
-                this.LogToViewModel?.Invoke("\nFailure: " + file + "\n");
+                this.LogToViewModel?.Invoke("\nCan't handle file extension. Failure: " + file);
             }
         }
 
