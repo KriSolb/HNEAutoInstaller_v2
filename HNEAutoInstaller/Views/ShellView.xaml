@@ -21,6 +21,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="20" />
         </Grid.ColumnDefinitions>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
             <RowDefinition Height="Auto" />
@@ -31,6 +32,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="20" />
         </Grid.RowDefinitions>
+        
         <!-- Row 1 -->
 
         <!-- Row 2 -->
@@ -40,28 +42,64 @@
             Grid.Row="3"
             Grid.Column="1"
             MinWidth="100"
+            MinHeight="30"
             Background="White"
             Margin="1">
-            Autoinstall
+            Presets:
         </Label>
 
         <!-- Row 4 -->
         <ComboBox
             x:Name="SvmPresets"
             SelectedItem="{Binding SelectedSvmPresets}"
+            MinWidth="150"
+            MinHeight="30"
             Grid.Row="4"
             Grid.Column="1"
             SelectedIndex="0"
             Margin="1">
         </ComboBox>
 
+        <Button
+            x:Name="SvmPresetNew"
+            MinWidth="100"
+            MinHeight="30"
+            Grid.Row="4"
+            Grid.Column="2"
+            Margin="1">
+            Erstellen
+        </Button>
+        
+        <Button
+            x:Name="SvmPresetEdit"
+            MinWidth="100"
+            MinHeight="30"
+            Grid.Row="4"
+            Grid.Column="3"
+            Margin="1">
+            Bearbeiten
+        </Button>
+        
+        <Button
+            x:Name="SvmPresetDelete"
+            MinWidth="100"
+            MinHeight="30"
+            Grid.Row="4"
+            Grid.Column="4"
+            Margin="1"
+            Background="PaleVioletRed">
+            Löschen
+        </Button>
+        
         <!-- Row 5 -->
         <Button
             x:Name="SvmInstallButton"
+            MinHeight="30"
             Grid.Row="5"
             Grid.Column="1"
-            Margin="1">
-            Install
+            Margin="1"
+            Background="LightGreen">
+            Ausführen
         </Button>
 
         <!-- Row 6 -->
