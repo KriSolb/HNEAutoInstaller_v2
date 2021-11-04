@@ -66,7 +66,7 @@ namespace HNEAutoInstaller.ViewModels
 
             List<String> templist = fileHandler.FetchPresetFiles((Int32)tempInt);
 
-            fileHandler.InstallAllFiles(templist);
+            fileHandler.InstallAllFiles(templist, this._selectedSvmPresets);
         }
 
         /// <summary>

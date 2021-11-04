@@ -75,16 +75,12 @@
             <param name="presetName">given preset name.</param>
             <returns> Returns filenames with specific preset as string-list.</returns>
         </member>
-        <member name="M:HNEAutoInstaller.Models.FileHandler.InstallAllFiles(System.Collections.Generic.List{System.String})">
+        <member name="M:HNEAutoInstaller.Models.FileHandler.InstallAllFiles(System.Collections.Generic.List{System.String},System.String)">
             <summary>
             Install all files from param string-list. Fetch filename, install args and destination from database.
             </summary>
             <param name="installList">Given string list.</param>
-        </member>
-        <member name="M:HNEAutoInstaller.Models.FileHandler.InstallAllFolderFiles">
-            <summary>
-            Install/Execute all files from folder after fetching all files from folder.
-            </summary>
+            <param name="preset">Given string preset name.</param>
         </member>
         <member name="M:HNEAutoInstaller.Models.FileHandler.InstallFile(System.String,System.String,System.String,System.String)">
             <summary>

@@ -172,10 +172,10 @@ namespace HNEAutoInstaller.Models
         /// </summary>
         /// <param name="presetName">given preset name.</param>
         /// <returns> Returns filenames with specific preset as string-list.</returns>
-        public Int64 FetchPresetID(String presetName) // TODO
+        public Int64 FetchPresetID(String presetName)
         {
             Int64 presetID = 0;
-            String query = Properties.Resources.FetchAllPresetNames; // TODO
+            String query = Properties.Resources.FetchAllPresetNames;
 
             DatabaseService dbObject = new();
             dbObject.OpenConnection();
@@ -201,8 +201,10 @@ namespace HNEAutoInstaller.Models
         /// Install all files from param string-list. Fetch filename, install args and destination from database.
         /// </summary>
         /// <param name="installList">Given string list.</param>
-        public void InstallAllFiles(List<String> installList)
+        /// <param name="preset">Given string preset name.</param>
+        public void InstallAllFiles(List<String> installList, String preset)
         {
+            this.LogToViewModel?.Invoke("\nInstalling Preset: " + preset + "\n");
             DatabaseService dbObject = new();
 
             String query = Properties.Resources.FetchAllFilesByFullFileName;
@@ -246,10 +248,7 @@ namespace HNEAutoInstaller.Models
             }
         }
 
-        /// <summary>
-        /// Install/Execute all files from folder after fetching all files from folder.
-        /// </summary>
-        public void InstallAllFolderFiles() => this.InstallAllFiles(this.FetchAllFiles());
+        // public void InstallAllFolderFiles() => this.InstallAllFiles(this.FetchAllFiles());
 
         /// <summary>
         /// Install/execute/unpack files, check what kind of file it is.
