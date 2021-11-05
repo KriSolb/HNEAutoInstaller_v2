@@ -18,7 +18,6 @@ namespace HNEAutoInstaller.Views
         public ShellView()
         {
             this.InitializeComponent();
-            this.DataContext = new ShellViewModel();
         }
     }
 }

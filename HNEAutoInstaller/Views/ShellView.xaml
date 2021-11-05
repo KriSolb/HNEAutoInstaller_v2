@@ -6,11 +6,15 @@
         xmlns:viewmodels="clr-namespace:HNEAutoInstaller.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:ShellViewModel}"
         mc:Ignorable="d"
+        DataContext="{DynamicResource MyContext}"
         Title="HNE Auto Installer v2"
         Height="768"
         Width="1024"
         WindowStartupLocation="CenterScreen"
         Background="#004d3d">
+    <Window.Resources>
+        <viewmodels:ShellViewModel x:Key="MyContext" />
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20" />

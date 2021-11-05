@@ -31,7 +31,6 @@ namespace HNEAutoInstaller.Views
         public ActiveChildView()
         {
             this.InitializeComponent();
-            this.DataContext = new ActiveChildViewModel();
         }
     }
 }
