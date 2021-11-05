@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Users\ksolb\Source\Repos\KriSolb\HNEAutoInstaller_v2\HNEAutoInstaller\HNEAutoInstaller.xml</DocumentationFile>
+    <DocumentationFile>..\..\HNEAutoInstaller.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,7 +27,7 @@
     <PackageReference Include="Narumikazuchi" Version="1.0.0" />
     <PackageReference Include="Narumikazuchi.Collections" Version="5.0.0" />
     <PackageReference Include="Narumikazuchi.Collections.Abstract" Version="1.0.0" />
-    <PackageReference Include="Narumikazuchi.Windows" Version="2.2.0" />
+    <PackageReference Include="Narumikazuchi.Windows" Version="2.1.0" />
     <PackageReference Include="SQLitePCLRaw.core" Version="2.0.6" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.354">
       <PrivateAssets>all</PrivateAssets>
