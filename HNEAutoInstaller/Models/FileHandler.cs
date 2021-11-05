@@ -100,7 +100,7 @@ namespace HNEAutoInstaller.Models
             try
             {
                 List<String> presetFileList = new();
-                DataTable result = Singleton<DatabaseHandler>.Instance.ExecuteQuery(Properties.Resources.FetchPresetFiles);
+                DataTable result = Singleton<DatabaseHandler>.Instance.ExecuteQuery(Properties.Resources.FetchPresetFiles, new Tuple<String, Object>("@presets_id", preset));
 
                 foreach (DataRow row in result.Rows)
                 {
