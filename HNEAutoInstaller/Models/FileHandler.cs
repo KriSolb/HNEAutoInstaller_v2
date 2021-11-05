@@ -158,7 +158,6 @@ namespace HNEAutoInstaller.Models
         public void InstallAllFiles(List<String> installList, String preset)
         {
             this.LogToViewModel?.Invoke("\n\nInstalling Preset: " + preset + "\n");
-            DataTable result = Singleton<DatabaseHandler>.Instance.ExecuteQuery(Properties.Resources.FetchAllFilesByFullFileName, new Tuple<String, Object>("@fullFileName", _fullFileName));
 
             try
             {
@@ -170,6 +169,7 @@ namespace HNEAutoInstaller.Models
                         _fileExtension = String.Empty;
                         _installArgument = String.Empty;
                         _zipTarget = String.Empty;
+                        DataTable result = Singleton<DatabaseHandler>.Instance.ExecuteQuery(Properties.Resources.FetchAllFilesByFullFileName, new Tuple<String, Object>("@fullFileName", _fullFileName));
 
                         foreach (DataRow row in result.Rows)
                         {
@@ -225,6 +225,8 @@ namespace HNEAutoInstaller.Models
                     _zipSource = $"{InstallFilesFolder}" + "\\" + $"{file}";
 
                     System.IO.Compression.ZipFile.ExtractToDirectory(_zipSource, desti);
+
+                    this.LogToViewModel?.Invoke("Unpacked succesfully: " + file + "\n");
                 }
                 catch (Exception)
                 {
