@@ -3,12 +3,10 @@
 // </copyright>
 
 using Caliburn.Micro;
-using HNEAutoInstaller.Services;
 using Narumikazuchi;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -148,6 +146,7 @@ namespace HNEAutoInstaller.Models
             {
                 return (Int64)result.Rows[0][0];
             }
+
             return 0;
         }
 

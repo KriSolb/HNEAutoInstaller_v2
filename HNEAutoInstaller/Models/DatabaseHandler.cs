@@ -42,6 +42,7 @@ namespace HNEAutoInstaller.Models
             {
                 command.Parameters.AddWithValue(parameter.Item1, parameter.Item2);
             }
+
             SQLiteDataReader reader = command.ExecuteReader();
             DataTable table = new();
             table.Load(reader);
@@ -49,7 +50,10 @@ namespace HNEAutoInstaller.Models
         }
     }
 
-    partial class DatabaseHandler : IDisposable
+    /// <summary>
+    /// Class DatabaseHandler models handling database access.
+    /// </summary>
+    public partial class DatabaseHandler : IDisposable
     {
         /// <inheritdoc/>
         public void Dispose()
