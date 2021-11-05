@@ -129,7 +129,7 @@ namespace HNEAutoInstaller.Models
 
             foreach (DataRow row in result.Rows)
             {
-                presetNames.Add(row["FullFileName"].ToString());
+                presetNames.Add(row["PresetName"].ToString());
             }
 
             return presetNames;
@@ -142,7 +142,7 @@ namespace HNEAutoInstaller.Models
         /// <returns> Returns filenames with specific preset as string-list.</returns>
         public Int64 FetchPresetID(String presetName)
         {
-            DataTable result = Singleton<DatabaseHandler>.Instance.ExecuteQuery(Properties.Resources.FetchAllPresetNames);
+            DataTable result = Singleton<DatabaseHandler>.Instance.ExecuteQuery(Properties.Resources.FetchAllPresetNames, new Tuple<String, Object>("@presetName", presetName));
 
             if (result.Rows.Count > 0)
             {
