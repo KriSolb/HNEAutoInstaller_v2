@@ -70,8 +70,8 @@
             MinHeight="30"
             Grid.Row="4"
             Grid.Column="2"
-            Margin="1">
-            Erstellen
+            Margin="1"
+            Content="Erstellen">
         </Button>
         
         <Button
@@ -80,8 +80,8 @@
             MinHeight="30"
             Grid.Row="4"
             Grid.Column="3"
-            Margin="1">
-            Bearbeiten
+            Margin="1"
+            Content="Bearbeiten">
         </Button>
         
         <Button
@@ -91,8 +91,8 @@
             Grid.Row="4"
             Grid.Column="4"
             Margin="1"
-            Background="PaleVioletRed">
-            Löschen
+            Background="PaleVioletRed"
+            Content="Löschen">
         </Button>
         
         <!-- Row 5 -->
@@ -102,8 +102,8 @@
             Grid.Row="5"
             Grid.Column="1"
             Margin="1"
-            Background="LightGreen">
-            Ausführen
+            Background="LightGreen"
+            Content="Ausführen">
         </Button>
 
         <!-- Row 6 -->
