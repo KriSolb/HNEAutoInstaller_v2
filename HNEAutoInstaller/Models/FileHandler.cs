@@ -158,7 +158,7 @@ namespace HNEAutoInstaller.Models
         /// <param name="preset">Given string preset name.</param>
         public void InstallAllFiles(List<String> installList, String preset)
         {
-            this.LogToViewModel?.Invoke("\nInstalling Preset: " + preset + "\n");
+            this.LogToViewModel?.Invoke("\n\nInstalling Preset: " + preset + "\n");
             DataTable result = Singleton<DatabaseHandler>.Instance.ExecuteQuery(Properties.Resources.FetchAllFilesByFullFileName, new Tuple<String, Object>("@fullFileName", _fullFileName));
 
             try
