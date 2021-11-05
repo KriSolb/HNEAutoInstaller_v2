@@ -3,7 +3,9 @@
 // </copyright>
 
 using Caliburn.Micro;
+using HNEAutoInstaller.Models;
 using HNEAutoInstaller.ViewModels;
+using Narumikazuchi;
 using System;
 using System.Windows;
 
@@ -30,6 +32,12 @@ namespace HNEAutoInstaller
         protected override void OnStartup(Object sender, StartupEventArgs e)
         {
             this.DisplayRootViewFor<ShellViewModel>();
+        }
+
+        /// <inheritdoc/>
+        protected override void OnExit(Object sender, EventArgs e)
+        {
+            Singleton<DatabaseHandler>.Instance.Dispose();
         }
     }
 }

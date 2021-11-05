@@ -132,4 +132,7 @@
   <data name="FetchPresetFiles" xml:space="preserve">
     <value>SELECT Files.FullFileName FROM Files INNER JOIN Files_Presets ON Files_Presets.presets_id = @presets_id WHERE Files_Presets.files_id = Files.files_id;</value>
   </data>
+  <data name="SQLConnectionString" xml:space="preserve">
+    <value>Data Source=Database\database.db;Version=3;UseUTF16Encoding=True</value>
+  </data>
 </root>

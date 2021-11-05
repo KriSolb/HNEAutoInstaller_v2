@@ -4,8 +4,10 @@
 
 using Caliburn.Micro;
 using HNEAutoInstaller.Services;
+using Narumikazuchi;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
@@ -17,7 +19,7 @@ namespace HNEAutoInstaller.Models
     /// <summary>
     /// Class FileHandler models file handling specific methods.
     /// </summary>
-    public class FileHandler : Narumikazuchi.Singleton
+    public class FileHandler : Singleton
     {
         private const String InstallFilesFolder = "InstallFiles";
         private const String DatabaseFolder = "Database";
@@ -51,22 +53,12 @@ namespace HNEAutoInstaller.Models
             {
                 _fileList = Directory.GetFiles(InstallFilesFolder).Select(Path.GetFileName).ToList();
 
-                String query = Properties.Resources.FetchAllFiles;
+                DataTable result = Singleton<DatabaseHandler>.Instance.ExecuteQuery(Properties.Resources.FetchAllFiles);
 
-                DatabaseService dbObject = new();
-                dbObject.OpenConnection();
-                SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
-                SQLiteDataReader result = installArgumentCommand.ExecuteReader();
-
-                if (result.HasRows)
+                foreach (DataRow row in result.Rows)
                 {
-                    while (result.Read())
-                    {
-                        _dbFileList.Add(result["FullFileName"].ToString());
-                    }
+                    _dbFileList.Add(row["FullFileName"].ToString());
                 }
-
-                dbObject.CloseConnection();
 
                 this.LogToViewModel?.Invoke("All files in folder:\n");
                 foreach (String x in _fileList)
@@ -108,27 +100,12 @@ namespace HNEAutoInstaller.Models
             try
             {
                 List<String> presetFileList = new();
-                DatabaseService dbObject = new();
+                DataTable result = Singleton<DatabaseHandler>.Instance.ExecuteQuery(Properties.Resources.FetchPresetFiles);
 
-                String query = Properties.Resources.FetchPresetFiles;
-
-                dbObject.OpenConnection();
-
-                SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
-
-                installArgumentCommand.Parameters.AddWithValue("@presets_id", preset);
-
-                SQLiteDataReader result = installArgumentCommand.ExecuteReader();
-
-                if (result.HasRows)
+                foreach (DataRow row in result.Rows)
                 {
-                    while (result.Read())
-                    {
-                        presetFileList.Add(result["FullFileName"].ToString());
-                    }
+                    presetFileList.Add(row["FullFileName"].ToString());
                 }
-
-                dbObject.CloseConnection();
 
                 _presetFileList = presetFileList;
             }
@@ -147,23 +124,14 @@ namespace HNEAutoInstaller.Models
         public BindableCollection<String> FetchPresetNames()
         {
             BindableCollection<String> presetNames = new();
-            String query = Properties.Resources.FetchAllPresets;
 
-            DatabaseService dbObject = new();
-            dbObject.OpenConnection();
-            SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
+            DataTable result = Singleton<DatabaseHandler>.Instance.ExecuteQuery(Properties.Resources.FetchAllPresets);
 
-            SQLiteDataReader result = installArgumentCommand.ExecuteReader();
-
-            if (result.HasRows)
+            foreach (DataRow row in result.Rows)
             {
-                while (result.Read())
-                {
-                    presetNames.Add(result["PresetName"].ToString());
-                }
+                presetNames.Add(row["FullFileName"].ToString());
             }
 
-            dbObject.CloseConnection();
             return presetNames;
         }
 
@@ -174,27 +142,13 @@ namespace HNEAutoInstaller.Models
         /// <returns> Returns filenames with specific preset as string-list.</returns>
         public Int64 FetchPresetID(String presetName)
         {
-            Int64 presetID = 0;
-            String query = Properties.Resources.FetchAllPresetNames;
+            DataTable result = Singleton<DatabaseHandler>.Instance.ExecuteQuery(Properties.Resources.FetchAllPresetNames);
 
-            DatabaseService dbObject = new();
-            dbObject.OpenConnection();
-            SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
-
-            installArgumentCommand.Parameters.AddWithValue("@presetName", presetName);
-
-            SQLiteDataReader result = installArgumentCommand.ExecuteReader();
-
-            if (result.HasRows)
+            if (result.Rows.Count > 0)
             {
-                while (result.Read())
-                {
-                    presetID = (Int64)result["presets_id"];
-                }
+                return (Int64)result.Rows[0][0];
             }
-
-            dbObject.CloseConnection();
-            return presetID;
+            return 0;
         }
 
         /// <summary>
@@ -205,13 +159,10 @@ namespace HNEAutoInstaller.Models
         public void InstallAllFiles(List<String> installList, String preset)
         {
             this.LogToViewModel?.Invoke("\nInstalling Preset: " + preset + "\n");
-            DatabaseService dbObject = new();
-
-            String query = Properties.Resources.FetchAllFilesByFullFileName;
+            DataTable result = Singleton<DatabaseHandler>.Instance.ExecuteQuery(Properties.Resources.FetchAllFilesByFullFileName, new Tuple<String, Object>("@fullFileName", _fullFileName));
 
             try
             {
-                dbObject.OpenConnection();
                 if (installList != null)
                 {
                     for (Int32 i = 0; i < installList.Count; i++)
@@ -221,26 +172,16 @@ namespace HNEAutoInstaller.Models
                         _installArgument = String.Empty;
                         _zipTarget = String.Empty;
 
-                        SQLiteCommand installArgumentCommand = new(query, dbObject.DbConnection);
-                        installArgumentCommand.Parameters.AddWithValue("@fullFileName", _fullFileName);
-
-                        SQLiteDataReader result = installArgumentCommand.ExecuteReader();
-
-                        if (result.HasRows)
+                        foreach (DataRow row in result.Rows)
                         {
-                            while (result.Read())
-                            {
-                                _fileExtension = result["FileExtension"].ToString();
-                                _installArgument = result["Arguments"].ToString();
-                                _zipTarget = result["Destination"].ToString();
-                            }
-
-                            this.InstallFile(_fileExtension, _fullFileName, _installArgument, _zipTarget);
+                            _fileExtension = row["FileExtension"].ToString();
+                            _installArgument = row["Arguments"].ToString();
+                            _zipTarget = row["Destination"].ToString();
                         }
+
+                        this.InstallFile(_fileExtension, _fullFileName, _installArgument, _zipTarget);
                     }
                 }
-
-                dbObject.CloseConnection();
             }
             catch (Exception e)
             {
