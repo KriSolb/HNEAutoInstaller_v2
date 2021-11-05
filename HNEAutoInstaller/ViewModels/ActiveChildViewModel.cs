@@ -17,7 +17,7 @@ namespace HNEAutoInstaller.ViewModels
     {
         private String _acvmOutput = String.Empty;
         private List<String> _acvmFileList = new();
-        private List<String> _selectedAcvmFileList = new();
+        private ActiveChildViewModel _selectedAcvmFileList;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActiveChildViewModel"/> class.
@@ -51,7 +51,7 @@ namespace HNEAutoInstaller.ViewModels
         /// <summary>
         /// Gets or Sets selected items/files in child view.
         /// </summary>
-        public List<String> SelectedAcvmFileList // macht gerade goar nüscht, außer bytes belegen.
+        public ActiveChildViewModel SelectedAcvmFileList // macht gerade goar nüscht, außer bytes belegen.
         {
             get
             {

@@ -204,7 +204,7 @@ namespace HNEAutoInstaller.Models
         /// <param name="preset">Given string preset name.</param>
         public void InstallAllFiles(List<String> installList, String preset)
         {
-            this.LogToViewModel?.Invoke("\nInstalling Preset: " + preset + "\n");
+            this.LogToViewModel?.Invoke("\n\nInstalling Preset: " + preset + "\n");
             DatabaseService dbObject = new();
 
             String query = Properties.Resources.FetchAllFilesByFullFileName;

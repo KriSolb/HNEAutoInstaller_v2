@@ -31,13 +31,17 @@
         </ListBox>
 
         <!-- "Output" -->
-        <TextBlock
-            Text="{Binding Path=AcvmOutput, Mode=OneWay}"
+        <TextBox
+            x:Name="AcvmOutput"
             Grid.Column="1"
             Grid.Row="1"
             Background="GhostWhite"
-            Margin="5,0,0,0">
-        </TextBlock>
+            Margin="5,0,0,0"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            ScrollViewer.CanContentScroll="True"
+            IsReadOnly="True"
+            ScrollViewer.PanningMode="VerticalFirst">
+        </TextBox>
         <TextBox
             Grid.Column="2"
             Grid.Row="1"
