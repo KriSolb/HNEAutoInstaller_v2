@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace HNEAutoInstaller.Models
 {
@@ -155,7 +156,7 @@ namespace HNEAutoInstaller.Models
         /// </summary>
         /// <param name="installList">Given string list.</param>
         /// <param name="preset">Given string preset name.</param>
-        public void InstallAllFiles(List<String> installList, String preset)
+        public async void InstallAllFiles(List<String> installList, String preset)
         {
             this.LogToViewModel?.Invoke("\n\nInstalling Preset: " + preset + "\n");
 
@@ -178,7 +179,7 @@ namespace HNEAutoInstaller.Models
                             _zipTarget = row["Destination"].ToString();
                         }
 
-                        this.InstallFile(_fileExtension, _fullFileName, _installArgument, _zipTarget);
+                        await this.InstallFile(_fileExtension, _fullFileName, _installArgument, _zipTarget);
                     }
                 }
             }
@@ -197,46 +198,50 @@ namespace HNEAutoInstaller.Models
         /// <param name="file">file name.</param>
         /// <param name="instArgs">install arguments.</param>
         /// <param name="desti">destination (for zip).</param>
-        public void InstallFile(String ext, String file, String instArgs, String desti)
+        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        public async Task InstallFile(String ext, String file, String instArgs, String desti)
         {
-            if (ext == "exe")
+            await Task.Run(() =>
             {
-                try
+                if (ext == "exe")
                 {
-                    this.LogToViewModel?.Invoke("\nStarting: " + file + "\n");
-                    Process p = new();
-                    p.StartInfo.FileName = $"{InstallFilesFolder}" + "\\" + $"{file}";
-                    p.StartInfo.Arguments = $"{instArgs}";
-                    p.Start();
-                    this.LogToViewModel?.Invoke("...\n");
-                    p.WaitForExit();
-                    this.LogToViewModel?.Invoke("Installed succesfully: " + file + "\n");
+                    try
+                    {
+                        this.LogToViewModel?.Invoke("\nStarting: " + file + "\n");
+                        Process p = new();
+                        p.StartInfo.FileName = $"{InstallFilesFolder}" + "\\" + $"{file}";
+                        p.StartInfo.Arguments = $"{instArgs}";
+                        p.Start();
+                        this.LogToViewModel?.Invoke("...\n");
+                        p.WaitForExit();
+                        this.LogToViewModel?.Invoke("Installed succesfully: " + file + "\n");
+                    }
+                    catch (Exception)
+                    {
+                        this.LogToViewModel?.Invoke("\n..." + "Failed to install: " + file);
+                    }
                 }
-                catch (Exception)
+                else if (ext == "zip")
                 {
-                    this.LogToViewModel?.Invoke("\n..." + "Failed to install: " + file);
-                }
-            }
-            else if (ext == "zip")
-            {
-                try
-                {
-                    this.LogToViewModel?.Invoke("\nUnpacking: " + file + "." + " to " + desti);
-                    _zipSource = $"{InstallFilesFolder}" + "\\" + $"{file}";
+                    try
+                    {
+                        this.LogToViewModel?.Invoke("\nUnpacking: " + file + "." + " to " + desti);
+                        _zipSource = $"{InstallFilesFolder}" + "\\" + $"{file}";
 
-                    System.IO.Compression.ZipFile.ExtractToDirectory(_zipSource, desti);
+                        System.IO.Compression.ZipFile.ExtractToDirectory(_zipSource, desti);
 
-                    this.LogToViewModel?.Invoke("Unpacked succesfully: " + file + "\n");
+                        this.LogToViewModel?.Invoke("Unpacked succesfully: " + file + "\n");
+                    }
+                    catch (Exception)
+                    {
+                        this.LogToViewModel?.Invoke("\n..." + "Failed zu unpack: " + file);
+                    }
                 }
-                catch (Exception)
+                else
                 {
-                    this.LogToViewModel?.Invoke("\n..." + "Failed zu unpack: " + file);
+                    this.LogToViewModel?.Invoke("\nCan't handle file extension. Failure: " + file);
                 }
-            }
-            else
-            {
-                this.LogToViewModel?.Invoke("\nCan't handle file extension. Failure: " + file);
-            }
+            });
         }
 
         /// <summary>
