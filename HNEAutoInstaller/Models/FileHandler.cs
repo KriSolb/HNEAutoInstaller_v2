@@ -198,12 +198,12 @@ namespace HNEAutoInstaller.Models
         /// <param name="file">file name.</param>
         /// <param name="instArgs">install arguments.</param>
         /// <param name="desti">destination (for zip).</param>
-        /// <returns><placeholder>A <see cref="Task"/> representing the asynchronous operation.</placeholder></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public async Task InstallFile(String ext, String file, String instArgs, String desti)
         {
             await Task.Run(() =>
             {
-                if (ext == "exe")
+                if (ext == "exe" || ext == "bat")
                 {
                     try
                     {
@@ -216,9 +216,9 @@ namespace HNEAutoInstaller.Models
                         p.WaitForExit();
                         this.LogToViewModel?.Invoke("Installed succesfully: " + file + "\n");
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        this.LogToViewModel?.Invoke("\n..." + "Failed to install: " + file);
+                        this.LogToViewModel?.Invoke("\n..." + "Failed to install: " + file + e);
                     }
                 }
                 else if (ext == "zip")
