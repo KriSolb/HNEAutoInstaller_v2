@@ -185,7 +185,7 @@ namespace HNEAutoInstaller.Models
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                this.LogToViewModel?.Invoke("\n..." + "Failed to fetch file parameter: " + _fullFileName + "\n" + e);
             }
         }
 
